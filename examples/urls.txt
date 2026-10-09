@@ -1,0 +1,13 @@
+# Example input for scraper-health.
+# One URL per line. Blank lines and lines starting with # are ignored.
+
+https://example.com
+https://example.org
+https://example.net
+https://www.iana.org/domains/reserved
+
+# Public test endpoints that deliberately return error statuses.
+# Uncomment to see non-success results in the report:
+# https://httpbin.org/status/403
+# https://httpbin.org/status/429
+# https://httpbin.org/status/500
