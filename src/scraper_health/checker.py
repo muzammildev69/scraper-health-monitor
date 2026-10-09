@@ -137,20 +137,20 @@ async def check_url(
     """
     started = time.perf_counter()
     try:
-        async with client.stream("GET", url) as response:
-            bytes_read = await _read_capped(response, max_bytes)
-            elapsed = time.perf_counter() - started
-            status = response.status_code
-            return CheckResult(
-                url=url,
-                result=classify_status(status),
-                status_code=status,
-                response_time=elapsed,
-                description=describe_status(status),
-                redirect_location=response.headers.get("location") if 300 <= status < 400 else None,
-                content_type=response.headers.get("content-type"),
-                bytes_read=bytes_read,
-            )
+        response = await client.get(url, follow_redirects=False)
+        bytes_read = await _read_capped(response, max_bytes)
+        elapsed = time.perf_counter() - started
+        status = response.status_code
+        return CheckResult(
+            url=url,
+            result=classify_status(status),
+            status_code=status,
+            response_time=elapsed,
+            description=describe_status(status),
+            redirect_location=response.headers.get("location") if 300 <= status < 400 else None,
+            content_type=response.headers.get("content-type"),
+            bytes_read=bytes_read,
+        )
     except (httpx.HTTPError, httpx.InvalidURL) as exc:
         category, description = classify_exception(exc)
         return CheckResult(
